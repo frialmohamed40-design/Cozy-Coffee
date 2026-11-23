@@ -1,3 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Menu | Cozy Coffee</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <a class="logo" href="index.html">
+        ☕️ Cozy<span>Coffee</span>
+    </a>
+
+    <button class="menu-btn" id="menuBtn"
+        aria-label="Open menu" aria-expanded="false">
+        ☰
+    </button>
+
+    <nav class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a class="active" href="services.html">Menu</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html">Cart 🛒</a>
+    </nav>
+
+</header>
+
+<main>
+
+    <!-- Page Hero -->
+
+    <section class="page-hero">
+
+        <p class="eyebrow">A CUP FOR EVERY MOOD</p>
+
+        <h1>Our Menu</h1>
+
+        <p>Find your new favorite.</p>
+
+    </section>
+
+
+    <!-- Coffee & Classics -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <p class="eyebrow">FRESHLY MADE</p>
+
+            <h2>Coffee & Classics</h2>
+
+            <p>Your cozy favorites, made with care.</p>
+
+        </div>
+
+
+        <div class="cards menu-grid">
+
+            <article class="coffee-card">
+
+                <img src="espresso.jpg" alt="Espresso">
+
+                <div class="card-body">
+
+                    <h3>Espresso</h3>
+
+                    <p>A short, intense shot with a rich aroma and golden crema.</p>
+
+                    <strong class="price">EGP 45</strong>
+
+                    <button class="btn add-cart-btn"
+                        data-id="espresso"
+                        data-name="Espresso"
+                        data-price="45"
+                        data-image="espresso.jpg">
+                        Add to Cart
+                    </button>
+
+                </div>
+
+            </article>
+
+
+            <article class="coffee-card">
+
+                <img src="cappuccino.jpg" alt="Cappuccino">
+
+                <div class="card-body">
+
+                    <h3>Cappuccino</h3>
+
+                    <p>Espresso, steamed milk, and a soft foam top.</p>
+
+                    <strong class="price">EGP 65</strong>
+
+                    <button class="btn add-cart-btn"
+                        data-id="cappuccino"
+                        data-name="Cappuccino"
+                        data-price="65"
+                        data-image="cappuccino.jpg">
+                        Add to Cart
+                    </button>
+
+                </div>
+
+            </article>
+
+
+            <article class="coffee-card">
+
+                <img src="house-special.jpg" alt="House Special">
+
+                <div class="card-body">
+
+                    <h3>House Special</h3>
+
+                    <p>Our signature cozy blend, served chilled with caramel notes.</p>
+
+                    <strong class="price">EGP 80</strong>
+
+                    <button class="btn add-cart-btn"
+                        data-id="house-special"
+                        data-name="House Special"
+                        data-price="80"
+                        data-image="house-special.jpg">
+                        Add to Cart
+                    </button>
+
+                </div>
+
+            </article>
+
+
+            <article class="coffee-card">
+
+                <img src="coffee-beans.jpg" alt="Fresh Coffee Beans">
+
+                <div class="card-body">
+
+                    <h3>Freshly Roasted Beans</h3>
+
+                    <p>Rich coffee beans selected for a lovely aroma.</p>
+
+                    <strong class="price">EGP 150</strong>
+
+                    <button class="btn add-cart-btn"
+                        data-id="coffee-beans"
+                        data-name="Freshly Roasted Beans"
+                        data-price="150"
+                        data-image="coffee-beans.jpg">
+                        Add to Cart
+                    </button>
+
+                </div>
+
+            </article>
+
 <article class="coffee-card">
 
                 <img src="slow-brew.jpg" alt="Slow Brew Coffee">
