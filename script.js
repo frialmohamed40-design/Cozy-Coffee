@@ -1,12 +1,9 @@
-// ===============================
-// Navigation Menu
-// ===============================
+// ================= MENU BUTTON =================
 
 const menuBtn = document.getElementById("menuBtn");
 const navLinks = document.getElementById("navLinks");
 
 if (menuBtn && navLinks) {
-
     menuBtn.addEventListener("click", () => {
         const isOpen = navLinks.classList.toggle("active");
 
@@ -17,43 +14,24 @@ if (menuBtn && navLinks) {
     navLinks.querySelectorAll("a").forEach(link => {
         link.addEventListener("click", () => {
             navLinks.classList.remove("active");
-            menuBtn.setAttribute("aria-expanded", "false");
             menuBtn.textContent = "☰";
+            menuBtn.setAttribute("aria-expanded", "false");
         });
-    });
-
-    document.addEventListener("click", event => {
-        if (
-            !navLinks.contains(event.target) &&
-            !menuBtn.contains(event.target)
-        ) {
-            navLinks.classList.remove("active");
-            menuBtn.setAttribute("aria-expanded", "false");
-            menuBtn.textContent = "☰";
-        }
     });
 }
 
-
-// ===============================
-// Footer Year
-// ===============================
+// ================= FOOTER YEAR =================
 
 document.querySelectorAll(".year").forEach(item => {
     item.textContent = new Date().getFullYear();
 });
 
-
-// ===============================
-// Contact Form
-// ===============================
+// ================= CONTACT FORM =================
 
 const contactForm = document.getElementById("contactForm");
 
 if (contactForm) {
-
     contactForm.addEventListener("submit", event => {
-
         event.preventDefault();
 
         const name = document.getElementById("name").value.trim();
@@ -64,7 +42,7 @@ if (contactForm) {
 
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!name || !email || !message) {
+        if (!name  !email  !message) {
             formMessage.textContent = "Please fill in all fields.";
             formMessage.className = "form-message error";
             return;
@@ -76,29 +54,19 @@ if (contactForm) {
             return;
         }
 
-        formMessage.textContent =
-            "Thank you! Your message passed the demo validation.";
-
+        formMessage.textContent = "Thank you! Your message has been received.";
         formMessage.className = "form-message success";
 
         contactForm.reset();
-
     });
 }
 
-
-// ===============================
-// Shopping Cart
-// ===============================
+// ================= SHOPPING CART =================
 
 const CART_KEY = "cozyCoffeeCart";
 
 function getCart() {
-    try {
-        return JSON.parse(localStorage.getItem(CART_KEY)) || [];
-    } catch (error) {
-        return [];
-    }
+    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
 }
 
 function saveCart(cart) {
@@ -106,13 +74,10 @@ function saveCart(cart) {
 }
 
 function formatPrice(amount) {
-    return `EGP ${Number(amount).toLocaleString("en-EG")}`;
+    return EGP ${Number(amount).toLocaleString("en-EG")};
 }
 
-
-// ===============================
-// Add Products To Cart
-// ===============================
+// ADD TO CART
 
 document.querySelectorAll(".add-cart-btn").forEach(button => {
 
@@ -138,22 +103,17 @@ document.querySelectorAll(".add-cart-btn").forEach(button => {
 
         saveCart(cart);
 
-        const oldText = button.textContent;
-
         button.textContent = "Added ✓";
 
         setTimeout(() => {
-            button.textContent = oldText;
-        }, 900);
+            button.textContent = "Add to Cart";
+        }, 1000);
 
     });
 
 });
 
-
-// ===============================
-// Display Shopping Cart
-// ===============================
+// ================= DISPLAY CART =================
 
 const cartItemsElement = document.getElementById("cartItems");
 
@@ -165,7 +125,7 @@ if (cartItemsElement) {
 
         if (cart.length === 0) {
 
-cartItemsElement.innerHTML = 
+            cartItemsElement.innerHTML = 
                 <div class="empty-cart">
                     <h2>Your cart is empty</h2>
                     <p>You have not added any coffee yet.</p>
@@ -177,7 +137,7 @@ cartItemsElement.innerHTML =
 
         } else {
 
-            cartItemsElement.innerHTML = cart.map(item => 
+            cartItemsElement.innerHTML = cart.map(item => `
 
                 <article class="cart-item">
 
@@ -189,22 +149,11 @@ cartItemsElement.innerHTML =
                         <p>${formatPrice(item.price)} each</p>
 
                         <div class="quantity-controls">
-
-                            <button
-                                type="button"
-                                data-action="decrease"
-                                data-id="${item.id}">
-                                −
-                            </button>
+                        <button data-action="decrease" data-id="${item.id}">−</button>
 
                             <strong>${item.quantity}</strong>
 
-                            <button
-                                type="button"
-                                data-action="increase"
-                                data-id="${item.id}">
-                                +
-                            </button>
+                            <button data-action="increase" data-id="${item.id}">+</button>
 
                         </div>
                     </div>
@@ -217,11 +166,9 @@ cartItemsElement.innerHTML =
 
                         <br>
 
-                        <button
-                            class="remove-btn"
-                            type="button"
-                            data-action="remove"
-                            data-id="${item.id}">
+                        <button class="remove-btn"
+                        data-action="remove"
+                        data-id="${item.id}">
                             Remove
                         </button>
 
@@ -229,7 +176,7 @@ cartItemsElement.innerHTML =
 
                 </article>
 
-            ).join("");
+            `).join("");
 
         }
 
@@ -238,21 +185,13 @@ cartItemsElement.innerHTML =
             0
         );
 
-        const subtotalElement = document.getElementById("cartSubtotal");
-        const totalElement = document.getElementById("cartTotal");
+        document.getElementById("cartSubtotal").textContent = formatPrice(total);
 
-        if (subtotalElement) {
-            subtotalElement.textContent = formatPrice(total);
-        }
-
-        if (totalElement) {
-            totalElement.textContent = formatPrice(total);
-        }
+        document.getElementById("cartTotal").textContent = formatPrice(total);
 
     }
 
-
-    // Quantity Controls
+    // QUANTITY AND REMOVE BUTTONS
 
     cartItemsElement.addEventListener("click", event => {
 
@@ -262,31 +201,27 @@ cartItemsElement.innerHTML =
 
         const cart = getCart();
 
-        const item = cart.find(
-            product => product.id === button.dataset.id
-        );
+        const item = cart.find(product => product.id === button.dataset.id);
 
         if (!item) return;
 
         if (button.dataset.action === "increase") {
-            item.quantity += 1;
+            item.quantity++;
         }
 
         if (button.dataset.action === "decrease") {
-            item.quantity -= 1;
+            item.quantity--;
         }
 
-        let updated = cart.filter(
-            product => product.quantity > 0
-        );
+        let updatedCart = cart.filter(product => product.quantity > 0);
 
         if (button.dataset.action === "remove") {
-            updated = cart.filter(
+            updatedCart = cart.filter(
                 product => product.id !== button.dataset.id
             );
         }
 
-        saveCart(updated);
+        saveCart(updatedCart);
 
         renderCart();
 
@@ -296,10 +231,7 @@ cartItemsElement.innerHTML =
 
 }
 
-
-// ===============================
-// Checkout
-// ===============================
+// ================= CHECKOUT =================
 
 const checkoutButton = document.getElementById("checkoutBtn");
 
@@ -309,24 +241,21 @@ if (checkoutButton) {
 
         const message = document.getElementById("checkoutMessage");
 
-        if (!message) return;
-
         if (getCart().length === 0) {
 
-            message.textContent =
-                "Your cart is empty. Add a coffee first.";
+            message.textContent = "Your cart is empty.";
 
             message.className = "form-message error";
 
             return;
+
         }
 
         message.textContent =
-            "This is a demo checkout. Online payment and order submission are not connected yet.";
+            "Thank you! This is a demo checkout.";
 
         message.className = "form-message success";
 
     });
 
 }
-      
