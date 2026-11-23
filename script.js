@@ -125,15 +125,15 @@ if (cartItemsElement) {
 
         if (cart.length === 0) {
 
-            cartItemsElement.innerHTML = 
-                <div class="empty-cart">
+            cartItemsElement.innerHTML = `
+                  <div class="empty-cart">
                     <h2>Your cart is empty</h2>
                     <p>You have not added any coffee yet.</p>
-                    <a class="btn" href="services.html">
-                        Explore the Menu
-                    </a>
-                </div>
-            ;
+                     <a class="btn" href="services.html">
+                     Explore the Menu
+           </a>
+        </div>
+  `;
 
         } else {
 
