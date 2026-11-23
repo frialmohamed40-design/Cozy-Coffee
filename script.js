@@ -64,7 +64,7 @@ if (contactForm) {
 
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!name  !email  !message) {
+        if (!name || !email || !message) {
             formMessage.textContent = "Please fill in all fields.";
             formMessage.className = "form-message error";
             return;
@@ -106,7 +106,7 @@ function saveCart(cart) {
 }
 
 function formatPrice(amount) {
-    return EGP ${Number(amount).toLocaleString("en-EG")};
+    return `EGP ${Number(amount).toLocaleString("en-EG")}`;
 }
 
 
