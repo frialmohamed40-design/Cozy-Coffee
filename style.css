@@ -477,6 +477,34 @@ body {
     color: #a23c2c;
 }
 
+
+/* DRINK SIZE SELECTOR */
+
+.size-label {
+    display: block;
+    color: var(--brown);
+    font-size: .9rem;
+    font-weight: bold;
+    margin: 12px 0 5px;
+}
+
+.size-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--latte);
+    border-radius: 4px;
+    background: var(--white);
+    color: var(--dark);
+    font: inherit;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.size-select:focus {
+    outline: 2px solid var(--caramel);
+    border-color: transparent;
+}
+
 /* MENU PRICES */
 
 .price {
