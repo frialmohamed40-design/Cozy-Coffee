@@ -818,7 +818,7 @@ body::before {
 
 /* CUSTOMER REVIEWS */
 .reviews-section {
-    background: rgba(255, 250, 243, .90);
+    background: linear-gradient(135deg, #fffaf3 0%, #faf3e8 52%, #f5eddf 100%);
 }
 .reviews-overview {
     display: flex;
