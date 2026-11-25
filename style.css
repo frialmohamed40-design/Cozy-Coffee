@@ -932,3 +932,22 @@ body {
     .tracking-progress { gap: 4px; }
     .tracking-step { font-size: .7rem; }
 }
+
+ 
+/* PROMO CODES & DISCOUNTS */
+.coupon-panel { margin: 18px 0; padding: 16px; background: var(--white); border: 1px solid var(--latte); border-radius: 6px; }
+.coupon-panel h3 { color: var(--dark); font-family: Georgia, serif; font-size: 1.15rem; margin-bottom: 5px; }
+.coupon-panel > p { font-size: .88rem; }
+.coupon-panel label { display: block; font-weight: bold; margin: 10px 0 5px; color: var(--brown); }
+.coupon-input-row { display: flex; gap: 8px; }
+.coupon-input-row input { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--latte); border-radius: 4px; background: var(--white); color: var(--dark); font: inherit; }
+.coupon-input-row .btn { padding: 9px 14px; }
+.coupon-hint { color: #806b58; margin-top: 8px; font-size: .78rem !important; }
+.coupon-message { margin-top: 8px; font-size: .85rem; font-weight: bold; }
+.coupon-message.success { color: #426b3e; }
+.coupon-message.error { color: #a23c2c; }
+.discount-line strong { color: #426b3e; }
+@media (max-width: 560px) {
+    .coupon-input-row { flex-direction: column; }
+    .coupon-input-row .btn { width: 100%; }
+}
