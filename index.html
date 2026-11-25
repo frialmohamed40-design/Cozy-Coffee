@@ -178,6 +178,48 @@
     </section>
 
 
+
+    <!-- Customer Reviews -->
+    <section class="section reviews-section" id="reviews">
+        <div class="section-heading">
+            <p class="eyebrow">KIND WORDS</p>
+            <h2>What Our Customers Say</h2>
+            <p>Share your Cozy Coffee moment with us.</p>
+        </div>
+
+        <div class="reviews-overview">
+            <strong id="reviewAverage">—</strong>
+            <span class="review-stars" id="reviewAverageStars">☆☆☆☆☆</span>
+            <span id="reviewCount">No reviews yet</span>
+        </div>
+
+        <div class="reviews-grid" id="reviewsList" aria-live="polite">
+            <p class="no-reviews">Be the first to leave a review!</p>
+        </div>
+
+        <form class="review-form" id="reviewForm">
+            <h3>Write a Review</h3>
+            <label for="reviewName">Your name</label>
+            <input type="text" id="reviewName" maxlength="40" placeholder="Enter your name" required>
+
+            <label for="reviewRating">Your rating</label>
+            <select id="reviewRating" required>
+                <option value="5">★★★★★ — Excellent</option>
+                <option value="4">★★★★☆ — Very good</option>
+                <option value="3">★★★☆☆ — Good</option>
+                <option value="2">★★☆☆☆ — Fair</option>
+                <option value="1">★☆☆☆☆ — Poor</option>
+            </select>
+
+            <label for="reviewText">Your review</label>
+            <textarea id="reviewText" rows="4" maxlength="400" placeholder="Tell us about your experience..." required></textarea>
+
+            <button class="btn" type="submit">Submit Review</button>
+            <p class="review-note">Reviews are saved in this browser for this demo website.</p>
+            <p class="form-message" id="reviewMessage" aria-live="polite"></p>
+        </form>
+    </section>
+
     <!-- Coffee Banner -->
 
     <section class="coffee-banner">
