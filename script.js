@@ -90,6 +90,31 @@ function formatPrice(amount) {
 }
 
 
+// ================= DRINK SIZE AND PRICE =================
+
+document.querySelectorAll("[data-size-select]").forEach(select => {
+    const card = select.closest(".coffee-card");
+    const button = card ? card.querySelector(".add-cart-btn") : null;
+    const priceLabel = card ? card.querySelector(".price") : null;
+
+    if (!button || !priceLabel) return;
+
+    const updateDrinkPrice = () => {
+        const option = select.options[select.selectedIndex];
+        const size = select.value;
+        const price = Number(option.dataset.price);
+
+        button.dataset.price = price;
+        button.dataset.id = button.dataset.baseId + "-" + size;
+        button.dataset.name = button.dataset.baseName + " (" + size.charAt(0).toUpperCase() + size.slice(1) + ")";
+        priceLabel.textContent = formatPrice(price);
+    };
+
+    select.addEventListener("change", updateDrinkPrice);
+    updateDrinkPrice();
+});
+
+
 // ================= ADD TO CART =================
 
 document.querySelectorAll(".add-cart-btn").forEach(button => {
@@ -97,9 +122,7 @@ document.querySelectorAll(".add-cart-btn").forEach(button => {
     button.addEventListener("click", () => {
 
         const cart = getCart();
-
         const id = button.dataset.id;
-
         const existing = cart.find(item => item.id === id);
 
         if (existing) {
