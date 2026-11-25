@@ -71,6 +71,18 @@ if (contactForm) {
 // ================= SHOPPING CART =================
 
 const CART_KEY = "cozyCoffeeCart";
+const POINTS_KEY = "cozyCoffeePoints";
+
+function getLoyaltyPoints() {
+    return Number(localStorage.getItem(POINTS_KEY)) || 0;
+}
+
+function updateLoyaltyDisplay(cartTotal = 0) {
+    const pointsElement = document.getElementById("loyaltyPoints");
+    const earningElement = document.getElementById("pointsToEarn");
+    if (pointsElement) pointsElement.textContent = getLoyaltyPoints() + " pts";
+    if (earningElement) earningElement.textContent = Math.floor(cartTotal / 10) + " pts";
+}
 
 function getCart() {
     try {
@@ -236,6 +248,8 @@ if (cartItemsElement) {
             totalElement.textContent = formatPrice(total);
         }
 
+        updateLoyaltyDisplay(total);
+
     }
 
 
@@ -302,61 +316,18 @@ if (checkoutButton) {
             return;
         }
 
-        message.textContent =
-            "Thank you! This is a demo checkout.";
+        const cart = getCart();
+        const orderTotal = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
+        const earnedPoints = Math.floor(orderTotal / 10);
+        const newBalance = getLoyaltyPoints() + earnedPoints;
 
+        localStorage.setItem(POINTS_KEY, String(newBalance));
+        saveCart([]);
+        renderCart();
+
+        message.textContent = "Thank you! You earned " + earnedPoints + " Cozy Rewards points. Your new balance is " + newBalance + " points. (Demo checkout)";
         message.className = "form-message success";
 
     });
 
-}
-
-// ================= COZY REWARDS POINTS =================
-const POINTS_KEY = "cozyCoffeePoints";
-
-function getLoyaltyPoints() {
-    return Number(localStorage.getItem(POINTS_KEY)) || 0;
-}
-
-function updateLoyaltyDisplay(cartTotal) {
-    const pointsElement = document.getElementById("loyaltyPoints");
-    const earningElement = document.getElementById("pointsToEarn");
-    if (pointsElement) pointsElement.textContent = getLoyaltyPoints() + " pts";
-    if (earningElement) earningElement.textContent = Math.floor((cartTotal || 0) / 10) + " pts";
-}
-
-if (typeof cartItemsElement !== "undefined" && cartItemsElement) {
-    const originalRenderCart = renderCart;
-    renderCart = function () {
-        originalRenderCart();
-        const currentTotal = getCart().reduce((sum, item) => sum + item.price * item.quantity, 0);
-        updateLoyaltyDisplay(currentTotal);
-    };
-    renderCart();
-}
-
-const rewardsCheckoutButton = document.getElementById("checkoutBtn");
-if (rewardsCheckoutButton) {
-    rewardsCheckoutButton.addEventListener("click", () => {
-        const cart = getCart();
-        if (!cart.length) return;
-        const total = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
-        const earned = Math.floor(total / 10);
-        const balance = getLoyaltyPoints() + earned;
-        localStorage.setItem(POINTS_KEY, String(balance));
-        saveCart([]);
-        if (cartItemsElement) {
-            cartItemsElement.innerHTML = '<div class="empty-cart"><h2>Thank you for your order!</h2><p>Your demo order has been placed successfully.</p><a class="btn" href="services.html">Explore the Menu</a></div>';
-        }
-        const subtotal = document.getElementById("cartSubtotal");
-        const totalElement = document.getElementById("cartTotal");
-        if (subtotal) subtotal.textContent = formatPrice(0);
-        if (totalElement) totalElement.textContent = formatPrice(0);
-        updateLoyaltyDisplay(0);
-        const message = document.getElementById("checkoutMessage");
-        if (message) {
-            message.textContent = "You earned " + earned + " Cozy Rewards points! Your new balance is " + balance + " points. (Demo checkout)";
-            message.className = "form-message success";
-        }
-    });
 }
