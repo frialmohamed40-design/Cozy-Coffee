@@ -72,6 +72,7 @@ if (contactForm) {
 
 const CART_KEY = "cozyCoffeeCart";
 const POINTS_KEY = "cozyCoffeePoints";
+const ORDERS_KEY = "cozyCoffeeOrders";
 
 function getLoyaltyPoints() {
     return Number(localStorage.getItem(POINTS_KEY)) || 0;
@@ -320,6 +321,16 @@ if (checkoutButton) {
         const orderTotal = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
         const earnedPoints = Math.floor(orderTotal / 10);
         const newBalance = getLoyaltyPoints() + earnedPoints;
+        const orderNumber = "CC-" + Date.now().toString().slice(-8);
+        const orders = getOrders();
+        orders.push({
+            orderNumber,
+            items: cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })),
+            total: orderTotal,
+            status: "received",
+            createdAt: new Date().toISOString()
+        });
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
 
         localStorage.setItem(POINTS_KEY, String(newBalance));
         saveCart([]);
@@ -332,7 +343,11 @@ if (checkoutButton) {
         if (totalElement) totalElement.textContent = formatPrice(0);
         updateLoyaltyDisplay(0);
 
-        message.textContent = "Thank you! You earned " + earnedPoints + " Cozy Rewards points. Your new balance is " + newBalance + " points. (Demo checkout)";
+        message.textContent = "Thank you! Order " + orderNumber + " placed. You earned " + earnedPoints + " Cozy Rewards points. Your new balance is " + newBalance + " points. Use the order number below to track it.";
+        const trackingInput = document.getElementById("trackingNumber");
+        if (trackingInput) trackingInput.value = orderNumber;
+        const trackingForm = document.getElementById("trackingForm");
+        if (trackingForm) trackingForm.requestSubmit();
         message.className = "form-message success";
 
     });
@@ -423,4 +438,53 @@ if (reviewForm) {
     });
 
     renderReviews();
+}
+
+
+// ================= ORDER TRACKING =================
+
+
+function getOrders() {
+    try {
+        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY));
+        return Array.isArray(orders) ? orders : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+const trackingForm = document.getElementById("trackingForm");
+if (trackingForm) {
+    trackingForm.addEventListener("submit", event => {
+        event.preventDefault();
+        const orderNumber = document.getElementById("trackingNumber").value.trim().toUpperCase();
+        const result = document.getElementById("trackingResult");
+        const order = getOrders().find(item => item.orderNumber.toUpperCase() === orderNumber);
+
+        if (!order) {
+            result.innerHTML = '<p class="tracking-error">We could not find this order. Check the number and try again on the same browser where you placed it.</p>';
+            return;
+        }
+
+        const date = new Date(order.createdAt).toLocaleString();
+        const itemsHtml = order.items.map(item =>
+            '<li>' + escapeTrackingText(item.name) + ' × ' + item.quantity + '</li>'
+        ).join("");
+
+        result.innerHTML =
+            '<div class="tracking-card">' +
+                '<div class="tracking-card-heading"><div><span class="tracking-label">ORDER NUMBER</span><h3>' + order.orderNumber + '</h3></div><span class="tracking-status">Order Received</span></div>' +
+                '<p class="tracking-date">Placed: ' + date + '</p>' +
+                '<div class="tracking-progress"><div class="tracking-step active"><span>1</span><strong>Received</strong></div><div class="tracking-step"><span>2</span><strong>Preparing</strong></div><div class="tracking-step"><span>3</span><strong>On the way</strong></div><div class="tracking-step"><span>4</span><strong>Delivered</strong></div></div>' +
+                '<h4>Order items</h4><ul>' + itemsHtml + '</ul>' +
+                '<p class="tracking-total">Order total: <strong>' + formatPrice(order.total) + '</strong></p>' +
+                '<p class="tracking-demo-note">Your order is recorded as received in this demo. The later stages need a real order-management system to update.</p>' +
+            '</div>';
+    });
+}
+
+function escapeTrackingText(value) {
+    return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[character]));
 }
