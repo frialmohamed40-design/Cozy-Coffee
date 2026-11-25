@@ -338,3 +338,89 @@ if (checkoutButton) {
     });
 
 }
+
+
+// ================= CUSTOMER REVIEWS =================
+
+const REVIEWS_KEY = "cozyCoffeeReviews";
+const reviewForm = document.getElementById("reviewForm");
+
+function getReviews() {
+    try {
+        const reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY));
+        return Array.isArray(reviews) ? reviews : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function renderReviews() {
+    const list = document.getElementById("reviewsList");
+    if (!list) return;
+
+    const reviews = getReviews();
+    const averageElement = document.getElementById("reviewAverage");
+    const averageStars = document.getElementById("reviewAverageStars");
+    const countElement = document.getElementById("reviewCount");
+
+    if (reviews.length === 0) {
+        list.innerHTML = '<p class="no-reviews">Be the first to leave a review!</p>';
+        if (averageElement) averageElement.textContent = "—";
+        if (averageStars) averageStars.textContent = "☆☆☆☆☆";
+        if (countElement) countElement.textContent = "No reviews yet";
+        return;
+    }
+
+    const average = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+    if (averageElement) averageElement.textContent = average.toFixed(1) + " / 5";
+    if (averageStars) averageStars.textContent = "★".repeat(Math.round(average)) + "☆".repeat(5 - Math.round(average));
+    if (countElement) countElement.textContent = reviews.length + (reviews.length === 1 ? " review" : " reviews");
+
+    list.replaceChildren();
+    reviews.slice().reverse().forEach(review => {
+        const card = document.createElement("article");
+        card.className = "review-card";
+
+        const name = document.createElement("h4");
+        name.textContent = review.name;
+
+        const stars = document.createElement("span");
+        stars.className = "review-stars";
+        stars.textContent = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+        stars.setAttribute("aria-label", review.rating + " out of 5 stars");
+
+        const comment = document.createElement("p");
+        comment.textContent = review.comment;
+
+        card.append(name, stars, comment);
+        list.appendChild(card);
+    });
+}
+
+if (reviewForm) {
+    reviewForm.addEventListener("submit", event => {
+        event.preventDefault();
+
+        const name = document.getElementById("reviewName").value.trim();
+        const rating = Number(document.getElementById("reviewRating").value);
+        const comment = document.getElementById("reviewText").value.trim();
+        const message = document.getElementById("reviewMessage");
+
+        if (!name || !comment || rating < 1 || rating > 5) {
+            message.textContent = "Please complete all review fields.";
+            message.className = "form-message error";
+            return;
+        }
+
+        const reviews = getReviews();
+        reviews.push({ name, rating, comment });
+        localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+
+        reviewForm.reset();
+        message.textContent = "Thank you! Your review has been added.";
+        message.className = "form-message success";
+        renderReviews();
+    });
+
+    renderReviews();
+}
