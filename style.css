@@ -21,9 +21,31 @@ html {
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: var(--white);
+    background: transparent;
     color: var(--text);
     line-height: 1.7;
+    position: relative;
+    isolation: isolate;
+}
+
+.site-background-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: -2;
+    pointer-events: none;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(35, 21, 13, .42), rgba(71, 45, 27, .30));
 }
 
 /* HEADER */
@@ -170,6 +192,8 @@ body {
 
 .section {
     padding: 85px 9%;
+    background: rgba(255, 250, 243, .88);
+    backdrop-filter: blur(2px);
 }
 
 .about-preview {
@@ -217,7 +241,7 @@ body {
 /* MENU CARDS */
 
 .menu-section {
-    background: var(--cream);
+    background: rgba(245, 237, 223, .91);
     text-align: center;
 }
 
@@ -363,7 +387,7 @@ body {
 }
 
 .values {
-    background: var(--cream);
+    background: rgba(245, 237, 223, .91);
 }
 
 /* ABOUT VALUES CARDS */
@@ -794,7 +818,7 @@ body {
 
 /* CUSTOMER REVIEWS */
 .reviews-section {
-    background: var(--white);
+    background: rgba(255, 250, 243, .90);
 }
 .reviews-overview {
     display: flex;
@@ -900,7 +924,7 @@ body {
 
 
 /* ORDER TRACKING */
-.tracking-section { background: var(--cream); }
+.tracking-section { background: rgba(245, 237, 223, .91); }
 .tracking-form { max-width: 650px; margin: 0 auto 24px; padding: 25px; background: var(--white); border: 1px solid var(--latte); border-radius: 8px; }
 .tracking-form label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--dark); }
 .tracking-input-row { display: flex; gap: 10px; }
