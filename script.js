@@ -73,6 +73,7 @@ if (contactForm) {
 const CART_KEY = "cozyCoffeeCart";
 const POINTS_KEY = "cozyCoffeePoints";
 const ORDERS_KEY = "cozyCoffeeOrders";
+const COUPON_KEY = "cozyCoffeeCoupon";
 
 function getLoyaltyPoints() {
     return Number(localStorage.getItem(POINTS_KEY)) || 0;
@@ -233,10 +234,14 @@ if (cartItemsElement) {
 
         }
 
-        const total = cart.reduce(
+        const subtotal = cart.reduce(
             (sum, item) => sum + item.price * item.quantity,
             0
         );
+        const discount = calculateDiscount(subtotal, getActiveCoupon());
+        const total = Math.max(0, subtotal - discount);
+        const discountElement = document.getElementById("cartDiscount");
+        if (discountElement) discountElement.textContent = "-" + formatPrice(discount);
 
         const subtotalElement = document.getElementById("cartSubtotal");
         const totalElement = document.getElementById("cartTotal");
@@ -318,7 +323,10 @@ if (checkoutButton) {
         }
 
         const cart = getCart();
-        const orderTotal = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
+        const subtotal = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
+        const appliedCoupon = getActiveCoupon();
+        const discount = calculateDiscount(subtotal, appliedCoupon);
+        const orderTotal = Math.max(0, subtotal - discount);
         const earnedPoints = Math.floor(orderTotal / 10);
         const newBalance = getLoyaltyPoints() + earnedPoints;
         const orderNumber = "CC-" + Date.now().toString().slice(-8);
@@ -326,6 +334,9 @@ if (checkoutButton) {
         orders.push({
             orderNumber,
             items: cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })),
+            subtotal,
+            discount,
+            coupon: appliedCoupon,
             total: orderTotal,
             status: "received",
             createdAt: new Date().toISOString()
@@ -334,6 +345,7 @@ if (checkoutButton) {
 
         localStorage.setItem(POINTS_KEY, String(newBalance));
         saveCart([]);
+        localStorage.removeItem(COUPON_KEY);
         if (cartItemsElement) {
             cartItemsElement.innerHTML = '<div class="empty-cart"><h2>Thank you for your order!</h2><p>Your demo order has been placed successfully.</p><a class="btn" href="services.html">Explore the Menu</a></div>';
         }
@@ -341,6 +353,10 @@ if (checkoutButton) {
         const totalElement = document.getElementById("cartTotal");
         if (subtotalElement) subtotalElement.textContent = formatPrice(0);
         if (totalElement) totalElement.textContent = formatPrice(0);
+        const discountElement = document.getElementById("cartDiscount");
+        if (discountElement) discountElement.textContent = formatPrice(0);
+        const couponMessage = document.getElementById("couponMessage");
+        if (couponMessage) couponMessage.textContent = "";
         updateLoyaltyDisplay(0);
 
         message.textContent = "Thank you! Order " + orderNumber + " placed. You earned " + earnedPoints + " Cozy Rewards points. Your new balance is " + newBalance + " points. Use the order number below to track it.";
@@ -487,4 +503,56 @@ function escapeTrackingText(value) {
     return String(value).replace(/[&<>"']/g, character => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     }[character]));
+}
+
+ 
+// ================= PROMO CODES =================
+
+function getActiveCoupon() {
+    return (localStorage.getItem(COUPON_KEY) || "").toUpperCase();
+}
+
+function calculateDiscount(subtotal, coupon) {
+    if (coupon === "COZY10") return Math.round(subtotal * 0.10);
+    if (coupon === "COZY15" && subtotal >= 200) return Math.round(subtotal * 0.15);
+    return 0;
+}
+
+const couponForm = document.getElementById("couponForm");
+if (couponForm) {
+    const couponInput = document.getElementById("couponCode");
+    const couponMessage = document.getElementById("couponMessage");
+    const savedCoupon = getActiveCoupon();
+    if (savedCoupon && couponInput) couponInput.value = savedCoupon;
+
+    couponForm.addEventListener("submit", event => {
+        event.preventDefault();
+        const code = couponInput.value.trim().toUpperCase();
+        const subtotal = getCart().reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
+
+        if (code === "COZY10") {
+            localStorage.setItem(COUPON_KEY, code);
+            couponMessage.textContent = "Success! 10% discount applied.";
+            couponMessage.className = "coupon-message success";
+        } else if (code === "COZY15" && subtotal >= 200) {
+            localStorage.setItem(COUPON_KEY, code);
+            couponMessage.textContent = "Great! 15% discount applied.";
+            couponMessage.className = "coupon-message success";
+        } else if (code === "COZY15") {
+            localStorage.removeItem(COUPON_KEY);
+            couponMessage.textContent = "COZY15 is valid on orders of EGP 200 or more.";
+            couponMessage.className = "coupon-message error";
+        } else {
+            localStorage.removeItem(COUPON_KEY);
+            couponMessage.textContent = "Invalid promo code. Please try COZY10 or COZY15.";
+            couponMessage.className = "coupon-message error";
+        }
+
+        const discount = calculateDiscount(subtotal, getActiveCoupon());
+        const discountElement = document.getElementById("cartDiscount");
+        const totalElement = document.getElementById("cartTotal");
+        if (discountElement) discountElement.textContent = "-" + formatPrice(discount);
+        if (totalElement) totalElement.textContent = formatPrice(Math.max(0, subtotal - discount));
+        updateLoyaltyDisplay(Math.max(0, subtotal - discount));
+    });
 }
