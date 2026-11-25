@@ -323,7 +323,14 @@ if (checkoutButton) {
 
         localStorage.setItem(POINTS_KEY, String(newBalance));
         saveCart([]);
-        renderCart();
+        if (cartItemsElement) {
+            cartItemsElement.innerHTML = '<div class="empty-cart"><h2>Thank you for your order!</h2><p>Your demo order has been placed successfully.</p><a class="btn" href="services.html">Explore the Menu</a></div>';
+        }
+        const subtotalElement = document.getElementById("cartSubtotal");
+        const totalElement = document.getElementById("cartTotal");
+        if (subtotalElement) subtotalElement.textContent = formatPrice(0);
+        if (totalElement) totalElement.textContent = formatPrice(0);
+        updateLoyaltyDisplay(0);
 
         message.textContent = "Thank you! You earned " + earnedPoints + " Cozy Rewards points. Your new balance is " + newBalance + " points. (Demo checkout)";
         message.className = "form-message success";
