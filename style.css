@@ -760,3 +760,33 @@ body {
         grid-column: 2;
     }
 }
+
+
+/* COZY REWARDS */
+.rewards-panel {
+    margin-top: 18px;
+    padding: 16px;
+    background: var(--white);
+    border: 1px solid var(--latte);
+    border-left: 4px solid var(--caramel);
+    border-radius: 6px;
+}
+.rewards-panel h3 {
+    font-family: Georgia, serif;
+    color: var(--dark);
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+}
+.rewards-panel p {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 5px 0;
+    font-size: .9rem;
+}
+.rewards-panel strong { color: var(--coffee); }
+.rewards-panel small {
+    display: block;
+    margin-top: 8px;
+    color: var(--text);
+}
