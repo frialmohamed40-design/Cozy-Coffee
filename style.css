@@ -896,3 +896,39 @@ body {
     .reviews-grid { grid-template-columns: 1fr; }
     .review-form { padding: 22px; }
 }
+
+
+
+/* ORDER TRACKING */
+.tracking-section { background: var(--cream); }
+.tracking-form { max-width: 650px; margin: 0 auto 24px; padding: 25px; background: var(--white); border: 1px solid var(--latte); border-radius: 8px; }
+.tracking-form label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--dark); }
+.tracking-input-row { display: flex; gap: 10px; }
+.tracking-input-row input { min-width: 0; flex: 1; padding: 12px; border: 1px solid var(--latte); border-radius: 4px; background: var(--white); font: inherit; color: var(--text); }
+.tracking-result { max-width: 800px; margin: 0 auto; }
+.tracking-card { background: var(--white); border: 1px solid var(--latte); border-radius: 8px; padding: 25px; }
+.tracking-card-heading { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+.tracking-label { color: var(--coffee); font-size: .75rem; letter-spacing: 2px; font-weight: bold; }
+.tracking-card h3, .tracking-card h4 { color: var(--dark); font-family: Georgia, serif; }
+.tracking-card h3 { font-size: 1.5rem; }
+.tracking-status { background: #e5eddf; color: #426b3e; padding: 6px 12px; border-radius: 20px; font-size: .85rem; font-weight: bold; }
+.tracking-date, .tracking-demo-note, .tracking-note { color: #806b58; font-size: .88rem; margin-top: 10px; }
+.tracking-progress { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 28px 0; }
+.tracking-step { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; color: #9b8b7b; font-size: .82rem; }
+.tracking-step span { width: 34px; height: 34px; display: grid; place-items: center; border: 2px solid var(--latte); border-radius: 50%; font-weight: bold; }
+.tracking-step.active { color: var(--coffee); }
+.tracking-step.active span { background: var(--caramel); color: white; border-color: var(--caramel); }
+.tracking-card ul { padding-left: 22px; margin: 8px 0 14px; }
+.tracking-total { border-top: 1px solid var(--latte); padding-top: 12px; }
+.tracking-total strong { color: var(--dark); }
+.tracking-error { text-align: center; color: #a23c2c; background: var(--white); padding: 18px; border-radius: 6px; }
+.tracking-demo-note { border-top: 1px solid var(--latte); padding-top: 12px; }
+.tracking-note { text-align: center; }
+@media (max-width: 560px) {
+    .tracking-form { padding: 18px; }
+    .tracking-input-row { flex-direction: column; }
+    .tracking-input-row .btn { width: 100%; }
+    .tracking-card { padding: 18px; }
+    .tracking-progress { gap: 4px; }
+    .tracking-step { font-size: .7rem; }
+}
