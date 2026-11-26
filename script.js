@@ -306,6 +306,20 @@ if (cartItemsElement) {
 
 // ================= CHECKOUT =================
 
+const paymentDetails = document.getElementById("paymentDetails");
+document.querySelectorAll('input[name="paymentMethod"]').forEach(input => {
+    input.addEventListener("change", () => {
+        if (!paymentDetails) return;
+        const notes = {
+            "InstaPay": "InstaPay selected. Transfer instructions and the payment reference will be provided by the store. This demo does not verify transfers.",
+            "Vodafone Cash": "Vodafone Cash selected. Wallet transfer details will be provided by the store. This demo does not verify transfers.",
+            "Visa": "Visa selected. This is a demo checkout only; no card details are collected and no real payment is processed.",
+            "Cash on Delivery": "Cash on Delivery selected. Please pay the order total in cash when your order arrives."
+        };
+        paymentDetails.textContent = notes[input.value] || "";
+    });
+});
+
 const checkoutButton = document.getElementById("checkoutBtn");
 
 if (checkoutButton) {
@@ -322,6 +336,14 @@ if (checkoutButton) {
             return;
         }
 
+        const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+        if (!selectedPayment) {
+            message.textContent = "Please choose a payment method.";
+            message.className = "form-message error";
+            return;
+        }
+
+        const paymentMethod = selectedPayment.value;
         const cart = getCart();
         const subtotal = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
         const appliedCoupon = getActiveCoupon();
@@ -338,6 +360,7 @@ if (checkoutButton) {
             discount,
             coupon: appliedCoupon,
             total: orderTotal,
+            paymentMethod,
             status: "received",
             createdAt: new Date().toISOString()
         });
@@ -359,7 +382,7 @@ if (checkoutButton) {
         if (couponMessage) couponMessage.textContent = "";
         updateLoyaltyDisplay(0);
 
-        message.textContent = "Thank you! Order " + orderNumber + " placed. You earned " + earnedPoints + " Cozy Rewards points. Your new balance is " + newBalance + " points. Use the order number below to track it.";
+        message.textContent = "Thank you! Order " + orderNumber + " placed using " + paymentMethod + ". You earned " + earnedPoints + " Cozy Rewards points. Your new balance is " + newBalance + " points. Use the order number below to track it.";
         const trackingInput = document.getElementById("trackingNumber");
         if (trackingInput) trackingInput.value = orderNumber;
         const trackingForm = document.getElementById("trackingForm");
