@@ -7,7 +7,24 @@
 
 <header class="site-header"><a class="logo" href="index.html">☕ Cozy<span>Coffee</span></a><button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">☰</button><nav class="nav-links" id="navLinks"><a href="index.html">Home</a><a href="about.html">About</a><a href="services.html">Menu</a><a href="contact.html">Contact</a><a class="active" href="cart.html">Cart 🛒</a></nav></header>
 <main><section class="page-hero"><p class="eyebrow">YOUR COFFEE, YOUR WAY</p><h1>Shopping Cart</h1><p>Review your order before checkout.</p></section>
-<section class="section cart-section"><div id="cartItems" class="cart-items"></div><aside class="cart-summary"><h2>Order Summary</h2><div class="summary-line"><span>Subtotal</span><strong id="cartSubtotal">EGP 0</strong></div><div class="summary-line"><span>Delivery</span><strong>Calculated later</strong></div><div class="coupon-panel"><h3>🎁 Special Offers</h3><p>Use a promo code and enjoy a little extra comfort.</p><form id="couponForm"><label for="couponCode">Promo code</label><div class="coupon-input-row"><input type="text" id="couponCode" placeholder="Enter code" autocomplete="off"><button class="btn" type="submit">Apply</button></div></form><p class="coupon-hint">Try <strong>COZY10</strong> for 10% off or <strong>COZY15</strong> for 15% off orders over EGP 200.</p><p id="couponMessage" class="coupon-message" aria-live="polite"></p></div><div class="summary-line discount-line"><span>Discount</span><strong id="cartDiscount">EGP 0</strong></div><div class="rewards-panel"><h3>☕ Cozy Rewards</h3><p>Your points balance: <strong id="loyaltyPoints">0 pts</strong></p><p>Points from this order: <strong id="pointsToEarn">0 pts</strong></p><small>Earn 1 point for every EGP 10 spent.</small></div><div class="payment-panel">
+<section class="section cart-section"><div id="cartItems" class="cart-items"></div><aside class="cart-summary"><h2>Order Summary</h2><div class="summary-line"><span>Subtotal</span><strong id="cartSubtotal">EGP 0</strong></div><div class="delivery-panel">
+    <h3>📍 Delivery Details</h3>
+    <label for="customerName">Full name</label>
+    <input id="customerName" type="text" placeholder="Your name" autocomplete="name">
+    <label for="customerPhone">Phone number</label>
+    <input id="customerPhone" type="tel" placeholder="01XXXXXXXXX" autocomplete="tel">
+    <label for="deliveryCity">Governorate</label>
+    <select id="deliveryCity">
+        <option value="">Choose your governorate</option>
+        <option value="Cairo">Cairo</option>
+        <option value="Giza">Giza</option>
+        <option value="Other">Other governorate</option>
+    </select>
+    <label for="deliveryAddress">Full address</label>
+    <textarea id="deliveryAddress" rows="2" placeholder="Street, building, floor, apartment"></textarea>
+    <p id="deliveryNote" class="delivery-note">Choose Cairo or Giza to calculate delivery.</p>
+</div>
+<div class="summary-line"><span>Delivery</span><strong id="deliveryFee">EGP 0</strong></div><div class="coupon-panel"><h3>🎁 Special Offers</h3><p>Use a promo code and enjoy a little extra comfort.</p><form id="couponForm"><label for="couponCode">Promo code</label><div class="coupon-input-row"><input type="text" id="couponCode" placeholder="Enter code" autocomplete="off"><button class="btn" type="submit">Apply</button></div></form><p class="coupon-hint">Try <strong>COZY10</strong> for 10% off or <strong>COZY15</strong> for 15% off orders over EGP 200.</p><p id="couponMessage" class="coupon-message" aria-live="polite"></p></div><div class="summary-line discount-line"><span>Discount</span><strong id="cartDiscount">EGP 0</strong></div><div class="rewards-panel"><h3>☕ Cozy Rewards</h3><p>Your points balance: <strong id="loyaltyPoints">0 pts</strong></p><p>Points from this order: <strong id="pointsToEarn">0 pts</strong></p><small>Earn 1 point for every EGP 10 spent.</small></div><div class="payment-panel">
     <h3>💳 Payment Method</h3>
     <p class="payment-intro">Choose how you would like to pay.</p>
     <div class="payment-options">
@@ -16,7 +33,7 @@
         <label class="payment-option"><input type="radio" name="paymentMethod" value="Visa"><span class="payment-icon">VISA</span><span><strong>Visa</strong><small>Card payment (demo)</small></span></label>
         <label class="payment-option"><input type="radio" name="paymentMethod" value="Cash on Delivery"><span class="payment-icon">EGP</span><span><strong>Cash on Delivery</strong><small>Pay when your order arrives</small></span></label>
     </div>
-    <p id="paymentDetails" class="payment-details" aria-live="polite">Select a payment method to see the instructions.</p>
+    <div id="paymentDetails" class="payment-details" aria-live="polite">Select a payment method to see the instructions.</div>
 </div>
 <div class="summary-line total-line"><span>Total</span><strong id="cartTotal">EGP 0</strong></div><button id="checkoutBtn" class="btn checkout-btn" type="button">Checkout</button><a class="continue-link" href="services.html">← Continue shopping</a><p id="checkoutMessage" class="form-message" aria-live="polite"></p></aside></section>
 <section class="section tracking-section" id="orderTracking">
