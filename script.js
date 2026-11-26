@@ -239,7 +239,7 @@ if (cartItemsElement) {
             0
         );
         const discount = calculateDiscount(subtotal, getActiveCoupon());
-        const total = Math.max(0, subtotal - discount);
+        const total = Math.max(0, subtotal - discount) + getDeliveryFee();
         const discountElement = document.getElementById("cartDiscount");
         if (discountElement) discountElement.textContent = "-" + formatPrice(discount);
 
@@ -247,14 +247,14 @@ if (cartItemsElement) {
         const totalElement = document.getElementById("cartTotal");
 
         if (subtotalElement) {
-            subtotalElement.textContent = formatPrice(total);
+            subtotalElement.textContent = formatPrice(subtotal);
         }
 
         if (totalElement) {
             totalElement.textContent = formatPrice(total);
         }
 
-        updateLoyaltyDisplay(total);
+        updateLoyaltyDisplay(Math.max(0, subtotal - discount));
 
     }
 
@@ -310,15 +310,49 @@ const paymentDetails = document.getElementById("paymentDetails");
 document.querySelectorAll('input[name="paymentMethod"]').forEach(input => {
     input.addEventListener("change", () => {
         if (!paymentDetails) return;
-        const notes = {
-            "InstaPay": "InstaPay selected. Transfer instructions and the payment reference will be provided by the store. This demo does not verify transfers.",
-            "Vodafone Cash": "Vodafone Cash selected. Wallet transfer details will be provided by the store. This demo does not verify transfers.",
-            "Visa": "Visa selected. This is a demo checkout only; no card details are collected and no real payment is processed.",
-            "Cash on Delivery": "Cash on Delivery selected. Please pay the order total in cash when your order arrives."
+        const content = {
+            "InstaPay": '<strong>InstaPay transfer</strong><p>Send the order amount to the store\'s InstaPay account. The account number / payment QR will appear here once supplied by the store.</p><div class="payment-placeholder">InstaPay account details will be added here.</div><small>Demo only: transfers are not automatically verified.</small>',
+            "Vodafone Cash": '<strong>Vodafone Cash wallet</strong><p>Transfer the order amount to the store wallet number.</p><div class="payment-placeholder">Vodafone Cash number will be added here.</div><small>Demo only: wallet transfers are not automatically verified.</small>',
+            "Visa": '<strong>Visa / Mastercard</strong><p>Card number, expiry date and security code must be entered only on a secure hosted payment page.</p><div class="payment-placeholder">Secure Visa checkout will open here after connecting a payment gateway (such as Paymob).</div><small>Do not enter real card details on this demo website. No card data is collected or stored here.</small>',
+            "Cash on Delivery": '<strong>Cash on Delivery</strong><p>Pay the full order total in cash when your order arrives. Delivery inside Cairo and Giza is EGP 90.</p>'
         };
-        paymentDetails.textContent = notes[input.value] || "";
+        paymentDetails.innerHTML = content[input.value] || "Select a payment method.";
     });
 });
+
+const deliveryCity = document.getElementById("deliveryCity");
+const deliveryFeeElement = document.getElementById("deliveryFee");
+const deliveryNote = document.getElementById("deliveryNote");
+const DELIVERY_FEE = 90;
+
+function getDeliveryFee() {
+    return deliveryCity && ["Cairo", "Giza"].includes(deliveryCity.value) ? DELIVERY_FEE : 0;
+}
+
+function updateDeliveryAndTotal() {
+    if (!deliveryCity) return;
+    const city = deliveryCity.value;
+    if (deliveryFeeElement) deliveryFeeElement.textContent =
+        ["Cairo", "Giza"].includes(city) ? formatPrice(DELIVERY_FEE) : (city === "Other" ? "Contact us" : formatPrice(0));
+    if (deliveryNote) {
+        deliveryNote.textContent = ["Cairo", "Giza"].includes(city)
+            ? "Delivery fee inside Cairo and Giza: EGP 90."
+            : city === "Other" ? "Please contact the store to confirm delivery availability and fees outside Cairo and Giza."
+            : "Choose Cairo or Giza to calculate delivery.";
+    }
+    const cart = getCart();
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const discount = calculateDiscount(subtotal, getActiveCoupon());
+    const total = Math.max(0, subtotal - discount) + getDeliveryFee();
+    const subtotalElement = document.getElementById("cartSubtotal");
+    const discountElement = document.getElementById("cartDiscount");
+    const totalElement = document.getElementById("cartTotal");
+    if (subtotalElement) subtotalElement.textContent = formatPrice(subtotal);
+    if (discountElement) discountElement.textContent = "-" + formatPrice(discount);
+    if (totalElement) totalElement.textContent = formatPrice(total);
+    updateLoyaltyDisplay(Math.max(0, subtotal - discount));
+}
+if (deliveryCity) deliveryCity.addEventListener("change", updateDeliveryAndTotal);
 
 const checkoutButton = document.getElementById("checkoutBtn");
 
@@ -344,11 +378,26 @@ if (checkoutButton) {
         }
 
         const paymentMethod = selectedPayment.value;
+        const customerName = document.getElementById("customerName")?.value.trim() || "";
+        const customerPhone = document.getElementById("customerPhone")?.value.trim() || "";
+        const deliveryCityValue = document.getElementById("deliveryCity")?.value || "";
+        const deliveryAddress = document.getElementById("deliveryAddress")?.value.trim() || "";
+        if (!customerName || !customerPhone || !deliveryCityValue || !deliveryAddress) {
+            message.textContent = "Please complete your name, phone number, governorate and full address.";
+            message.className = "form-message error";
+            return;
+        }
+        if (deliveryCityValue === "Other") {
+            message.textContent = "Please contact the store to confirm delivery outside Cairo and Giza before placing your order.";
+            message.className = "form-message error";
+            return;
+        }
         const cart = getCart();
         const subtotal = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
         const appliedCoupon = getActiveCoupon();
         const discount = calculateDiscount(subtotal, appliedCoupon);
-        const orderTotal = Math.max(0, subtotal - discount);
+        const deliveryFee = getDeliveryFee();
+        const orderTotal = Math.max(0, subtotal - discount) + deliveryFee;
         const earnedPoints = Math.floor(orderTotal / 10);
         const newBalance = getLoyaltyPoints() + earnedPoints;
         const orderNumber = "CC-" + Date.now().toString().slice(-8);
@@ -360,6 +409,11 @@ if (checkoutButton) {
             discount,
             coupon: appliedCoupon,
             total: orderTotal,
+            deliveryFee,
+            customerName,
+            customerPhone,
+            deliveryCity: deliveryCityValue,
+            deliveryAddress,
             paymentMethod,
             status: "received",
             createdAt: new Date().toISOString()
@@ -376,6 +430,7 @@ if (checkoutButton) {
         const totalElement = document.getElementById("cartTotal");
         if (subtotalElement) subtotalElement.textContent = formatPrice(0);
         if (totalElement) totalElement.textContent = formatPrice(0);
+        if (deliveryFeeElement) deliveryFeeElement.textContent = formatPrice(0);
         const discountElement = document.getElementById("cartDiscount");
         if (discountElement) discountElement.textContent = formatPrice(0);
         const couponMessage = document.getElementById("couponMessage");
@@ -516,6 +571,8 @@ if (trackingForm) {
                 '<p class="tracking-date">Placed: ' + date + '</p>' +
                 '<div class="tracking-progress"><div class="tracking-step active"><span>1</span><strong>Received</strong></div><div class="tracking-step"><span>2</span><strong>Preparing</strong></div><div class="tracking-step"><span>3</span><strong>On the way</strong></div><div class="tracking-step"><span>4</span><strong>Delivered</strong></div></div>' +
                 '<h4>Order items</h4><ul>' + itemsHtml + '</ul>' +
+                '<p class="tracking-total">Delivery: ' + formatPrice(order.deliveryFee || 0) + '</p>' +
+                '<p>Payment method: ' + escapeTrackingText(order.paymentMethod || "Not specified") + '</p>' +
                 '<p class="tracking-total">Order total: <strong>' + formatPrice(order.total) + '</strong></p>' +
                 '<p class="tracking-demo-note">Your order is recorded as received in this demo. The later stages need a real order-management system to update.</p>' +
             '</div>';
@@ -575,7 +632,7 @@ if (couponForm) {
         const discountElement = document.getElementById("cartDiscount");
         const totalElement = document.getElementById("cartTotal");
         if (discountElement) discountElement.textContent = "-" + formatPrice(discount);
-        if (totalElement) totalElement.textContent = formatPrice(Math.max(0, subtotal - discount));
+        if (totalElement) totalElement.textContent = formatPrice(Math.max(0, subtotal - discount) + getDeliveryFee());
         updateLoyaltyDisplay(Math.max(0, subtotal - discount));
     });
 }
