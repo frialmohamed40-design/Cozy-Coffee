@@ -103,6 +103,13 @@ function formatPrice(amount) {
     return `EGP ${Number(amount).toLocaleString("en-EG")}`;
 }
 
+// Delivery inside Cairo and Giza is EGP 90.
+function getDeliveryFee() {
+    const city = document.getElementById("deliveryCity")?.value || "";
+    return ["Cairo", "Giza"].includes(city) ? 90 : 0;
+}
+
+
 
 // ================= DRINK SIZE AND PRICE =================
 
@@ -325,9 +332,7 @@ const deliveryFeeElement = document.getElementById("deliveryFee");
 const deliveryNote = document.getElementById("deliveryNote");
 const DELIVERY_FEE = 90;
 
-function getDeliveryFee() {
-    return deliveryCity && ["Cairo", "Giza"].includes(deliveryCity.value) ? DELIVERY_FEE : 0;
-}
+
 
 function updateDeliveryAndTotal() {
     if (!deliveryCity) return;
