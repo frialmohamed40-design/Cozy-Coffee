@@ -1052,3 +1052,56 @@ body::before {
     color: var(--brown);
     font-size: .82rem;
 }
+
+
+/* DELIVERY DETAILS */
+.delivery-panel {
+    margin: 18px 0;
+    padding: 17px;
+    background: var(--white);
+    border: 1px solid var(--latte);
+    border-radius: 8px;
+}
+.delivery-panel h3 {
+    color: var(--dark);
+    font-family: Georgia, serif;
+    margin-bottom: 10px;
+}
+.delivery-panel label {
+    display: block;
+    color: var(--brown);
+    font-weight: bold;
+    font-size: .86rem;
+    margin: 10px 0 5px;
+}
+.delivery-panel input,
+.delivery-panel select,
+.delivery-panel textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 10px 11px;
+    border: 1px solid var(--latte);
+    border-radius: 5px;
+    background: var(--cream);
+    color: var(--dark);
+    font: inherit;
+}
+.delivery-panel textarea { resize: vertical; }
+.delivery-note {
+    margin-top: 10px;
+    color: var(--coffee);
+    font-size: .82rem;
+    font-weight: bold;
+}
+.payment-details p { margin: 7px 0; }
+.payment-details small { display: block; margin-top: 8px; color: #806b58; }
+.payment-placeholder {
+    margin: 10px 0;
+    padding: 12px;
+    border: 1px dashed var(--caramel);
+    border-radius: 5px;
+    background: var(--cream);
+    color: var(--brown);
+    font-weight: bold;
+    text-align: center;
+}
